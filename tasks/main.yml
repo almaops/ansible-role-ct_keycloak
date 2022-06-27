@@ -1,0 +1,41 @@
+---
+
+- name: "{{ ct_keycloak_task_prefix }} role dependencies"
+  ansible.builtin.include_role:
+    name: almaops.docker
+  when: ct_keycloak_enable_roledeps
+
+- name: "{{ ct_docker_registry_task_prefix }} create directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ ct_keycloak_path_config }}"
+
+- name: "{{ ct_keycloak_task_prefix }} create {{ ct_keycloak_path_config }}/{{ ct_keycloak_file_config }}"
+  template:
+    src: "{{ ct_keycloak_template_config }}"
+    dest: "{{ ct_keycloak_path_config }}/{{ ct_keycloak_file_config }}"
+    mode: 0600
+    owner: 1000
+    group: 0
+  register: ct_keycloak_task_configure
+
+- name: "{{ ct_keycloak_task_prefix }} create container {{ ct_keycloak_ct_name }}"
+  docker_container:
+    name: "{{ ct_keycloak_ct_name }}"
+    image: "{{ ct_keycloak_ct_image }}:{{ ct_keycloak_ct_version }}"
+    #ports: "{{ ct_keycloak_ct_ports }}"
+    network_mode: "host"
+    restart_policy: "{{ ct_keycloak_ct_restart_policy }}"
+    state: "{{ ct_keycloak_ct_state }}"
+    restart: "{{ ct_keycloak_ct_restart | bool }}"
+    pull: "{{ ct_keycloak_ct_pull | bool }}"
+    recreate: "{{ ct_keycloak_ct_recreate | bool }}"
+    volumes: "{{ ct_keycloak_ct_volumes }}"
+    env: "{{ ct_keycloak_ct_env }}"
+    hostname: "{{ ct_keycloak_hostname }}"
+    #command: [ "start", "--hostname={{ ct_keycloak_hostname }}" ]
+    command: [ "start-dev" ]

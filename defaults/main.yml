@@ -1,0 +1,56 @@
+---
+# Keycloak general settings
+ct_kaycloak_task_prefix: "=== CT_KEYCLOAK ==="
+
+# Common settings
+ct_keycloak_enable_roledeps: "{{ almaops_enable_roledeps | default(true) | bool }}"
+
+# Path settings
+ct_keycloak_path_config: "/srv/{{ ct_keycloak_ct_name }}/cfg"
+ct_keycloak_file_config: "cache-ispn-jdbc-ping.xml"
+ct_keycloak_template_config: "cache-ispn-jdbc-ping.xml"
+
+# Network settings
+ct_keycloak_bind_addr: "127.0.0.1"
+ct_keycloak_bind_port: "8080"
+
+# Container settings
+ct_keycloak_ct_name: "keycloak"
+ct_keycloak_ct_image: "quay.io/keycloak/keycloak"
+ct_keycloak_ct_version: "18.0.1"
+ct_keycloak_ct_restart_policy: "always"
+ct_keycloak_ct_pull: "false"
+ct_keycloak_ct_recreate: "false"
+ct_keycloak_ct_state: "started"
+ct_keycloak_ct_restart: "false"
+ct_keycloak_ct_volumes:
+  - "{{ ct_keycloak_path_config }}/{{ ct_keycloak_file_config }}:/opt/keycloak/conf/{{ ct_keycloak_file_config }}"
+
+ct_keycloak_ct_env:
+  KEYCLOAK_ADMIN: "{{ ct_keycloak_admin_user }}"
+  KEYCLOAK_ADMIN_PASSWORD: "{{ ct_keycloak_admin_pass }}"
+  KC_DB: "{{ ct_keycloak_db_type }}"
+  KC_DB_URL_HOST: "{{ ct_keycloak_db_host }}"
+  KC_DB_URL_DATABASE: "{{ ct_keycloak_db_name }}"
+  KC_DB_USERNAME: "{{ ct_keycloak_db_user }}"
+  KC_DB_PASSWORD: "{{ ct_keycloak_db_pass }}"
+  KC_LOG_LEVEL: "{{ ct_keycloak_log_level }}"
+  JGROUPS_DISCOVERY_EXTERNAL_IP: "{{ ct_keycloak_discovery_external_ip }}"
+  KC_CACHE_CONFIG_FILE: "{{ ct_keycloak_file_config }}"
+
+# Configuration settings
+ct_keycloak_admin_user: "admin"
+ct_keycloak_admin_pass: "{{ undef(hint='specify keycloak admin password') }}"
+ct_keycloak_db_type: "{{ undef(hint='specify keycloak database type') }}"
+ct_keycloak_db_host: "{{ undef(hint='specify keycloak database host') }}"
+ct_keycloak_db_name: "{{ undef(hint='specify keycloak database name') }}"
+ct_keycloak_db_user: "{{ undef(hint='specify keycloak database username') }}"
+ct_keycloak_db_pass: "{{ undef(hint='specify keycloak database password') }}"
+ct_keycloak_log_level: "INFO,org.infinispan:DEBUG,org.jgroups:DEBUG"
+ct_keycloak_discovery_external_ip: "{{ ct_keycloak_bind_addr }}"
+
+ct_keycloak_hostname: "{{ inventory_hostname }}"
+
+# links:
+# https://www.keycloak.org/2019/08/keycloak-jdbc-ping
+# https://www.keycloak.org/2019/05/keycloak-cluster-setup.html
