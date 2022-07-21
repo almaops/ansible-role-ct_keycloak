@@ -37,5 +37,4 @@
     volumes: "{{ ct_keycloak_ct_volumes }}"
     env: "{{ ct_keycloak_ct_env }}"
     hostname: "{{ ct_keycloak_hostname }}"
-    #command: [ "start", "--hostname={{ ct_keycloak_hostname }}" ]
-    command: [ "start-dev" ]
+    command: "{{ ct_keycloak_ct_command }}"

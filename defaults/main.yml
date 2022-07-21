@@ -38,6 +38,8 @@ ct_keycloak_ct_env:
   JGROUPS_DISCOVERY_EXTERNAL_IP: "{{ ct_keycloak_discovery_external_ip }}"
   KC_CACHE_CONFIG_FILE: "{{ ct_keycloak_file_config }}"
 
+ct_keycloak_ct_command: [ "start-dev" ]
+
 # Configuration settings
 ct_keycloak_admin_user: "admin"
 ct_keycloak_admin_pass: "{{ undef(hint='specify keycloak admin password') }}"
