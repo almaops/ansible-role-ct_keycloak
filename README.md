@@ -1,3 +1,7 @@
+# DEPRECATION NOTICE
+This repo is archived and no longer maintained.  
+`ct_keycloak` role is provided via [almaops.common](https://github.com/almaops/ansible-collection-common/tree/master/roles/ct_keycloak) collection.
+
 almaops.ct_keycloak
 ==========
 
